@@ -16,3 +16,40 @@ retroarch -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so /roms/yourga
 
 RUN mkdir -p /tmp/runtime-dir && chmod 700 /tmp/runtime-dir
 ENV XDG_RUNTIME_DIR=/tmp/runtime-dir
+
+
+FROM arm64v8/ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary dependencies
+RUN apt update && apt install -y \
+    retroarch \
+    xvfb \
+    x11vnc \
+    fluxbox \
+    novnc \
+    websockify \
+    wget \
+    python3 \
+    net-tools \
+    && apt clean
+
+# Create folders
+RUN mkdir -p /root/.config/retroarch && \
+    mkdir /roms
+
+# Optional: Copy your retroarch.cfg
+# COPY retroarch.cfg /root/.config/retroarch/retroarch.cfg
+
+# Copy noVNC to /opt/novnc
+RUN mkdir -p /opt/novnc && \
+    cp -r /usr/share/novnc/* /opt/novnc/
+
+EXPOSE 8080
+
+CMD bash -c "Xvfb :0 -screen 0 1024x768x16 & \
+             fluxbox & \
+             x11vnc -display :0 -nopw -forever -shared & \
+             retroarch --menu & \
+             websockify --web=/opt/novnc 8080 localhost:5900"
