@@ -1,0 +1,6 @@
+docker run --rm -it \
+    --device /dev/input \
+    -v ~/roms:/roms \
+    retroarch-n64 \
+    -L /root/.config/retroarch/cores/mupen64plus_next_libretro.so \
+    "/roms/smash-bros.v64"
