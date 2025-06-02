@@ -12,3 +12,7 @@ docker run -it --rm -v /path/to/your/roms:/roms retroarch-arm64
 retroarch --download-core mupen64plus_next
 
 retroarch -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so /roms/yourgame.v64
+
+
+RUN mkdir -p /tmp/runtime-dir && chmod 700 /tmp/runtime-dir
+ENV XDG_RUNTIME_DIR=/tmp/runtime-dir
